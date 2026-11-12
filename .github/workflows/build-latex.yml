@@ -28,11 +28,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install XeLaTeX and fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends latexmk texlive-xetex texlive-lang-chinese texlive-latex-extra fonts-noto-core fonts-noto-mono
+          sudo apt-get install -y --no-install-recommends latexmk texlive-xetex texlive-lang-chinese texlive-latex-extra texlive-fonts-recommended fonts-noto-core fonts-noto-mono
       - name: Compile public notes
         working-directory: IE5202-Applied-Forecasting-Methods/Quiz-2
         run: latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname=IE5202-Quiz2-Review-Public main.tex

@@ -24,7 +24,7 @@ Alternatively run XeLaTeX with the same job name until cross-references and the 
 Ubuntu dependencies:
 
 ```bash
-sudo apt-get install latexmk texlive-xetex texlive-lang-chinese texlive-latex-extra fonts-noto-core fonts-noto-mono
+sudo apt-get install latexmk texlive-xetex texlive-lang-chinese texlive-latex-extra texlive-fonts-recommended fonts-noto-core fonts-noto-mono
 ```
 
 The source uses Noto Serif, Noto Sans, Noto Sans Mono and the TeX Live Fandol Chinese font set. The six PNG files are versioned source assets, not remotely linked images. Their original simulation-generation script is not available in this edition; the PDF can be rebuilt from the tracked assets, but regenerating the plots from simulated data is not yet supported.
