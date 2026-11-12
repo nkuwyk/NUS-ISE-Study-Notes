@@ -1,0 +1,55 @@
+name: Build IE5202 revision PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'IE5202-Applied-Forecasting-Methods/Quiz-2/main.tex'
+      - 'IE5202-Applied-Forecasting-Methods/Quiz-2/figures/**'
+      - '.github/workflows/build-latex.yml'
+  pull_request:
+    paths:
+      - 'IE5202-Applied-Forecasting-Methods/Quiz-2/main.tex'
+      - 'IE5202-Applied-Forecasting-Methods/Quiz-2/figures/**'
+      - '.github/workflows/build-latex.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: latex-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XeLaTeX and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends latexmk texlive-xetex texlive-lang-chinese texlive-latex-extra fonts-noto-core fonts-noto-mono
+      - name: Compile public notes
+        working-directory: IE5202-Applied-Forecasting-Methods/Quiz-2
+        run: latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname=IE5202-Quiz2-Review-Public main.tex
+      - name: Upload compiled PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: IE5202-Quiz2-Review-Public
+          path: IE5202-Applied-Forecasting-Methods/Quiz-2/IE5202-Quiz2-Review-Public.pdf
+          if-no-files-found: error
+          retention-days: 30
+      - name: Update downloadable PDF on main
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f IE5202-Applied-Forecasting-Methods/Quiz-2/IE5202-Quiz2-Review-Public.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m 'Build IE5202 Quiz 2 public revision PDF'
+            git push origin HEAD:main
+          fi

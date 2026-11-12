@@ -21,7 +21,7 @@
 \definecolor{softred}{HTML}{FFF6F3}
 \definecolor{softgold}{HTML}{FFF9EB}
 \definecolor{graytext}{HTML}{536273}
-\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=teal,pdftitle={IE5202 Lecture 7--12 Final Exam Review},pdfauthor={IE5202 Study Notes}}
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=teal,pdftitle={IE5202 Quiz 2 Public Revision Notes},pdfauthor={IE5202 Study Notes}}
 \captionsetup{font=footnotesize,labelfont={bf,color=navy},skip=3pt}
 \titleformat{\section}{\LARGE\bfseries\color{navy}}{\thesection}{0.7em}{}
 \titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{0.6em}{}
@@ -55,7 +55,7 @@
 \vspace{3mm}\textcolor{graytext}{\rule{0.92\linewidth}{0.6pt}}\par
 \end{center}
 \begin{keybox}[title={使用说明 / Reading Guide}]
-本讲义严格按上传的\textbf{Lecture 7 Regression on Time、Lecture 8 Exponential Smoothing、Lecture 9 ARMA、Lecture 10 ARIMA/SARIMA、Lecture 11 RNN/LSTM、Lecture 12 Transformer} 组织。公式沿用课堂记号；个别软件的 MA 符号约定不同会特别说明。\textbf{图像题是重中之重}，公开版不包含教师课件原图及官方试题原文；保留独立模拟的 Q1--Q6 识图练习。
+本讲义按以下课程主题：\textbf{Lecture 7 Regression on Time、Lecture 8 Exponential Smoothing、Lecture 9 ARMA、Lecture 10 ARIMA/SARIMA、Lecture 11 RNN/LSTM、Lecture 12 Transformer} 组织。公式沿用课堂记号；个别软件的 MA 符号约定不同会特别说明。\textbf{图像题是重中之重}，公开版不包含教师课件原图及官方试题原文；保留独立模拟的 Q1--Q6 识图练习。
 \end{keybox}
 \begin{center}
 \begin{tabularx}{0.96\linewidth}{>{\bfseries}l X l}
@@ -532,36 +532,36 @@ Q1: AR(1)；Q2: MA(2)；Q3: AR(2)；Q4: ARMA(1,1) 候选；Q5: Seasonal AR(1)；
 \begin{keybox}[title={Independent exercises / 独立编写练习}]
 These are newly written conceptual questions for independent practice, \textbf{not} official NUS quiz questions. 以下为独立编写的概念练习，\textbf{并非} NUS 官方试题。
 \end{keybox}
-\subsection*{Exercise 1: Residual diagnostics / 残差诊断}
-An RNN forecast has residual Ljung--Box $p=0.003$. Does this support the white-noise assumption? / RNN 残差检验 $p=0.003$，是否支持白噪声假设？
-\textbf{Answer / 答案：}No. Reject the null of no autocorrelation at the tested lags. / 否，应拒绝所检验滞后内无自相关的原假设。
-\subsection*{Exercise 2: Gradient decay / 梯度衰减}
-A scalar recurrent weight is $0.6$. What is the magnitude of the 8-step linearized gradient factor? / 权重为 $0.6$，八步梯度因子是多少？
-\textbf{Answer / 答案：}$0.6^8\approx 0.0168$. Repeated multiplication causes vanishing gradients. / 连乘造成梯度消失。
-\subsection*{Exercise 3: Linear RNN / 线性循环网络}
-For $W=0.5,U=0.4,V=2$, find the coefficient on $y_{t-2}$ in the unfolded forecast. / 求展开预测中 $y_{t-2}$ 的系数。
-\textbf{Answer / 答案：}$VW^2U=2(0.5)^2(0.4)=0.2$.
-\subsection*{Exercise 4: NNAR vs AR / 神经网络与自回归}
-A feed-forward network uses only identity activations on lagged observations and minimizes squared errors. What classical model does its output resemble? / 滞后输入、恒等激活与平方损失对应哪类经典模型？
-\textbf{Answer / 答案：}A linear AR model estimated by least squares. / 最小二乘估计的线性 AR 模型。
-\subsection*{Exercise 5: Forget gate / 遗忘门}
-When an LSTM forget gate approaches one, what happens to the direct previous-cell-state contribution? / 遗忘门趋近 1 时旧状态如何变化？
-\textbf{Answer / 答案：}The previous cell state is largely preserved. / 旧状态主要被保留。
-\subsection*{Exercise 6: SES equivalence / SES 类比}
-A one-dimensional linear recurrence is $h_t=0.85h_{t-1}+0.15y_t$. Identify its SES smoothing parameter. / 对应的 SES 平滑参数是多少？
-\textbf{Answer / 答案：}$\alpha=0.15$.
-\subsection*{Exercise 7: Invertible MA / 可逆 MA}
-Why does a finite-lag linear predictor generally approximate, rather than exactly reproduce, an invertible MA(1)? / 为什么有限滞后线性预测通常只能近似可逆 MA(1)？
-\textbf{Answer / 答案：}Its autoregressive representation generally has infinitely many lags. / 它的 AR 表示通常具有无限多个滞后项。
-\subsection*{Exercise 8: GRU update / GRU 更新}
-In $h_t=h_{t-1}+z_t(\widetilde h_t-h_{t-1})$, which term plays the role of the SES smoothing factor? / 哪个量类似 SES 平滑系数？
-\textbf{Answer / 答案：}$z_t$ in this stated convention. / 在给定约定下是 $z_t$。
-\subsection*{Exercise 9: Attention / 注意力}
-If a causal attention model forecasts at time $t$, may its attention weights access the unknown $y_{t+1}$? / 在 $t$ 时刻预测，能读取未知的 $y_{t+1}$ 吗？
-\textbf{Answer / 答案：}No; that would be look-ahead leakage. / 不能，否则属于未来信息泄漏。
-\subsection*{Exercise 10: Seasonal lag / 季节滞后}
-For monthly data, an ACF peak at lag 12 suggests what kind of dependence? / 月度数据 ACF 在 lag 12 显著提示什么？
-\textbf{Answer / 答案：}Dependence on the same month of the previous year; inspect seasonal candidates and diagnostics. / 可能与去年同月相关，仍需候选模型比较及残差诊断。
+\subsection*{Exercise 1: Two-step smoothing / 两次平滑更新}
+A sensor has initial level $L_0=100$ and $\alpha=0.2$. The next readings are 110 and 90. Compute $L_2$ and the SES forecast three periods after time 2. / 求第二期水平与其后三步预测。
+\textbf{Answer / 答案：}$L_1=102$, $L_2=0.8(102)+0.2(90)=99.6$. Without a trend component, $\hat y_{5|2}=99.6$.
+\subsection*{Exercise 2: Attention allocation / 注意力分配}
+Two allowed attention logits are $0$ and $\log 3$, with values 4 and 12. Compute the softmax weights and weighted value. / 求权重与加权输出。
+\textbf{Answer / 答案：}Weights are $(1/4,3/4)$; output is $4/4+36/4=10$. / 权重归一化后输出为 10。
+\subsection*{Exercise 3: Gate arithmetic / 门控计算}
+A scalar cell has $c_{t-1}=2$, $f_t=0.9$, $i_t=0.25$, and $\tilde c_t=-0.4$. Find $c_t$. Does this determine $h_t$? / 计算新细胞状态；能否据此确定隐状态？
+\textbf{Answer / 答案：}$c_t=0.9(2)+0.25(-0.4)=1.7$. The output gate is still needed to obtain $h_t=o_t\tanh(c_t)$. / 仍需输出门。
+\subsection*{Exercise 4: Receptive field / 感受野}
+A causal convolution stack has one convolution per layer, kernel size 3, stride 1, and dilations 1, 2, 4. How many time positions lie in its receptive field? / 求感受野大小。
+\textbf{Answer / 答案：}$R=1+(3-1)(1+2+4)=15$, covering the current input and the preceding 14 positions. / 包含当前与之前 14 个位置。
+\subsection*{Exercise 5: Seasonal reconstruction / 季节还原}
+Let $z_t=y_t-y_{t-12}$. At time $n$, $y_{n-11}=80$ and $\hat z_{n+1|n}=5$. Obtain $\hat y_{n+1|n}$ and identify the historical value needed for the following month. / 求下一月预测及再下一月所需历史值。
+\textbf{Answer / 答案：}$\hat y_{n+1|n}=85$; the next month uses $y_{n-10}$. / 季节差分还原需对齐去年同月。
+\subsection*{Exercise 6: Model diagnostics / 模型诊断}
+Two models use the same training data and likelihood convention. Model A has AIC 120 and residual Ljung--Box $p=0.002$; B has AIC 123 and $p=0.40$. Is choosing A solely by AIC well justified? / 只按 AIC 选择 A 是否充分？
+\textbf{Answer / 答案：}No. A has lower AIC but evidence of remaining residual autocorrelation. Investigate its specification and compare chronological validation performance; B's larger $p$ does not prove correctness. / 应结合诊断与时间顺序验证。
+\subsection*{Exercise 7: Validation leakage / 验证泄漏}
+A forecaster standardizes an entire series before separating its final 20 observations for validation. Which information has leaked, and how should the pipeline change? / 泄漏在哪里，如何修正？
+\textbf{Answer / 答案：}Validation observations influenced the mean and standard deviation. Fit preprocessing on each training window and apply those fitted parameters to its validation window. / 预处理参数只由训练窗口估计。
+\subsection*{Exercise 8: Diminishing lag weights / 滞后权重衰减}
+A scalar linear recurrence has $W=-0.5$. If the coefficient of the current observation in its unfolded forecast is $0.8$, find the next three lag coefficients. / 求之后三个滞后系数。
+\textbf{Answer / 答案：}$-0.4,\ 0.2,\ -0.1$. The ratio is $W$, giving alternating signs and geometric decay. / 符号交替且按几何级数衰减。
+\subsection*{Exercise 9: Interval interpretation / 区间解释}
+Two intervals for the same regression at the same future time use factors $s\sqrt{h_*}$ and $s\sqrt{1+h_*}$. Which should be used for a new observation, and why is it wider? / 哪个用于新观测，为什么更宽？
+\textbf{Answer / 答案：}Use $s\sqrt{1+h_*}$; it includes new-observation noise as well as uncertainty in the fitted mean. / 多出的 1 对应新观测误差。
+\subsection*{Exercise 10: Differencing expansion / 差分展开}
+For quarterly observations, expand $(1-B)(1-B^4)y_t$ and state the information required to reconstruct $y_t$ from this difference. / 展开并说明还原所需历史值。
+\textbf{Answer / 答案：}$y_t-y_{t-1}-y_{t-4}+y_{t-5}$. Reconstruction adds $y_{t-1}+y_{t-4}-y_{t-5}$ to the difference. / 需对齐三个历史时点。
 \clearpage
 \section*{附录：Lecture 7--12 英文术语考前速查表}
 \addcontentsline{toc}{section}{附录：英文术语考前速查表}
@@ -664,7 +664,7 @@ Regression with ARMA errors & 带 ARMA 误差的回归 & 回归解释均值，AR
 \bottomrule
 \end{longtable}
 
-\subsection*{E. Lecture 11：神经网络、RNN、LSTM（对应官方 Q1--Q10）}
+\subsection*{E. Lecture 11：神经网络、RNN、LSTM}
 \begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
 \toprule English & 中文 & 识别提示\\\midrule\endhead
 Feed-forward neural network & 前馈神经网络 & 无循环状态\\
