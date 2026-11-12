@@ -1,0 +1,763 @@
+% !TEX program = xelatex
+% IE5202 Applied Forecasting Methods | Lecture 7--12 Exam Review
+% Recommended: XeLaTeX, compile twice. All figures in figures/.
+\documentclass[UTF8,fontset=fandol,10.5pt,a4paper]{ctexart}
+\usepackage{geometry}
+\geometry{top=19mm,bottom=20mm,left=18mm,right=18mm,headheight=13pt}
+\usepackage{fontspec,amsmath,amssymb,mathtools,bm,booktabs,array,tabularx,longtable,multirow}
+\usepackage{graphicx,subcaption,float,placeins,needspace,enumitem,multicol,xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr,lastpage,titlesec,hyperref,caption,microtype}
+\setmainfont{Noto Serif}
+\setsansfont{Noto Sans}
+\setmonofont{Noto Sans Mono}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4.5pt}
+\linespread{1.10}
+\definecolor{navy}{HTML}{1E3556}
+\definecolor{teal}{HTML}{087A80}
+\definecolor{brick}{HTML}{A34035}
+\definecolor{softblue}{HTML}{F2F7FA}
+\definecolor{softred}{HTML}{FFF6F3}
+\definecolor{softgold}{HTML}{FFF9EB}
+\definecolor{graytext}{HTML}{536273}
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=teal,pdftitle={IE5202 Lecture 7--12 Final Exam Review},pdfauthor={IE5202 Study Notes}}
+\captionsetup{font=footnotesize,labelfont={bf,color=navy},skip=3pt}
+\titleformat{\section}{\LARGE\bfseries\color{navy}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{navy}}{\thesubsubsection}{0.45em}{}
+\titlespacing*{\section}{0pt}{11pt}{8pt}
+\titlespacing*{\subsection}{0pt}{9pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{7pt}{3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\scriptsize IE5202 · Applied Forecasting Methods}
+\fancyhead[R]{\sffamily\scriptsize Lecture 7--12 · 考前复习}
+\fancyfoot[L]{\sffamily\scriptsize 独立学习资料 · 非官方}
+\fancyfoot[R]{\sffamily\scriptsize \thepage\,/\,\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.35pt}
+\newtcolorbox{keybox}[1][]{enhanced,colback=softblue,colframe=teal,boxrule=0.65pt,arc=2mm,left=2mm,right=2mm,top=1mm,bottom=1mm,breakable,title={\sffamily\bfseries 核心公式与判别},fonttitle=\small,#1}
+\newtcolorbox{pitbox}[1][]{enhanced,colback=softred,colframe=brick,boxrule=0.55pt,arc=2mm,left=2mm,right=2mm,top=1mm,bottom=1mm,breakable,title={\sffamily\bfseries 易错点提醒},fonttitle=\small,#1}
+\newtcolorbox{exam}[1][]{enhanced,colback=softgold,colframe=orange!55!black,boxrule=0.55pt,arc=2mm,left=2mm,right=2mm,top=1mm,bottom=1mm,breakable,title={\sffamily\bfseries 考题模式 / 快速识别},fonttitle=\small,#1}
+\newcommand{\eng}[1]{{\sffamily\color{navy}#1}}
+\newcommand{\figone}[3][0.87]{\begin{figure}[htbp]\centering\includegraphics[width=#1\linewidth]{figures/#2}\caption{#3}\end{figure}}
+\newcommand{\remember}[1]{{\color{teal}\bfseries #1}}
+\newcommand{\formula}[1]{\[\boxed{#1}\]}
+\newcommand{\thick}{\renewcommand{\arraystretch}{1.18}}
+\setlist[itemize]{leftmargin=1.7em,itemsep=1.5pt,topsep=2pt}
+\setlist[enumerate]{leftmargin=2em,itemsep=1.5pt,topsep=2pt}
+\begin{document}
+\begin{center}
+{\sffamily\bfseries\color{navy}\fontsize{24}{28}\selectfont IE5202}\par
+\vspace{2mm}
+{\Large APPLIED FORECASTING METHODS}\par\vspace{4mm}
+{\huge\bfseries Lecture 7--12 考前复习讲义}\par\vspace{3mm}
+{\small 讲义知识点 · 完整公式 · 图像识别 · 易错陷阱 · 六道 ACF/PACF 练习}\par
+\vspace{3mm}\textcolor{graytext}{\rule{0.92\linewidth}{0.6pt}}\par
+\end{center}
+\begin{keybox}[title={使用说明 / Reading Guide}]
+本讲义严格按上传的\textbf{Lecture 7 Regression on Time、Lecture 8 Exponential Smoothing、Lecture 9 ARMA、Lecture 10 ARIMA/SARIMA、Lecture 11 RNN/LSTM、Lecture 12 Transformer} 组织。公式沿用课堂记号；个别软件的 MA 符号约定不同会特别说明。\textbf{图像题是重中之重}，公开版不包含教师课件原图及官方试题原文；保留独立模拟的 Q1--Q6 识图练习。
+\end{keybox}
+\begin{center}
+\begin{tabularx}{0.96\linewidth}{>{\bfseries}l X l}
+\toprule
+章节 & 主题与必考动作 & 强调 \tabularnewline\midrule
+L7 & 时间回归、预测区间、DW、季节虚拟变量/Fourier、增长曲线 & 模型辨析 \\
+L8 & SES、Holt、Holt--Winters 加法/乘法、SSE、区间 & 递推计算 \\
+L9 & 平稳性、SAC/SPAC、ACF/PACF、AR/MA/ARMA、后移算子 & \textcolor{brick}{识图重点} \\
+L10 & ARIMA/SARIMA、差分、季节滞后、模型检验、酒店案例 & \textcolor{brick}{识图重点} \\
+L11 & NNAR、RNN、BPTT、LSTM/GRU、预测与诊断 & 门控与梯度 \\
+L12 & 激活函数、TCN、Seq2Seq、Attention、Transformer、前沿方法 & 结构与公式 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\vspace{3mm}
+\begin{exam}[title={考前最优学习顺序}]
+先看 L9--L10 的 ACF/PACF 截尾、季节 lag 12 识别、酒店 SARIMA 和 Q1--Q6，再掌握 L7--L8 的递推/区间；最后集中记 L11--L12 的网络结构、门控机制、Attention 公式及预测策略。\textbf{所有图像识别只能给出候选模型，不能取代残差检验。}
+\end{exam}
+\tableofcontents
+\clearpage
+\section{Lecture 7 · Regression on Time}
+\subsection{时间回归：用 $t$ 解释趋势}
+讲义基准式 $y_t=TR_t+\epsilon_t$：\eng{Trend} 是可由时间解释的系统变化；$\epsilon_t$ 是剩余误差。截距项不能被误解为“第 0 期一定实际存在”。
+\begin{keybox}
+\begin{align*}
+\text{No trend: }& TR_t=\beta_0\\
+\text{Linear: }&y_t=\beta_0+\beta_1t+\epsilon_t\\
+\text{Quadratic: }&y_t=\beta_0+\beta_1t+\beta_2t^2+\epsilon_t
+\end{align*}
+线性趋势斜率固定为 $\beta_1$；二次趋势的局部变化率是 $\beta_1+2\beta_2t$，$\beta_2<0$ 意味着曲线逐渐向下弯，不一定表示全部时期都在下降。
+\end{keybox}
+课堂 \eng{Calculator Sales}：$\hat y_t=198.029+8.0743t$，预测第 25 期为 $198.029+8.0743\times25$。课堂 \eng{Loan Requests}：$\hat y_t=199.62+50.937t-0.5677t^2$；二次项允许增长速度改变。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{点预测 vs 区间预测；宽度从哪里来？}
+给定线性回归，$\hat y_{t_*}=\hat\beta_0+\hat\beta_1t_*$。讲义单个\textbf{新观测值}的预测区间：
+\formula{\hat y_{t_*}\pm t_{1-\alpha/2,n-2}\,s\sqrt{1+h_{t_*}},\quad h_{t_*}=\frac1n+\frac{(t_*-\bar t)^2}{\sum_{i=1}^{n}(t_i-\bar t)^2}}
+其中 $s=\sqrt{SSE/(n-2)}$（线性回归）；$h$ 是杠杆值。预测越远离 $\bar t$，区间越宽。对均值的\eng{confidence interval} 不带根号内的“$1$”；对新观测的\eng{prediction interval} 带“$1$”。多元/二次回归须用相应的 $\mathbf x_*^\top(X^\top X)^{-1}\mathbf x_*$ 和残差自由度 $n-k$，不能机械照搬简单线性回归的 $n-2$。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{残差自相关与 Durbin--Watson (DW)}
+回归误差独立的假设若失效，常规标准误与 t/F 检验可能不可靠。\eng{First-order autocorrelation}: $\epsilon_t=\phi\epsilon_{t-1}+a_t$；$\phi>0$ 正相关，$\phi<0$ 负相关。
+\formula{DW=d=\frac{\sum_{t=2}^{n}(e_t-e_{t-1})^2}{\sum_{t=1}^{n}e_t^2}\ \approx\ 2(1-r_1)}
+\begin{center}\thick\begin{tabular}{lll}\toprule
+$d\approx0$ & 强正自相关 & 相邻残差相近 \\
+$d\approx2$ & 无明显一阶自相关 & $H_0$ 倾向不拒绝 \\
+$d\approx4$ & 强负自相关 & 正负交替 \\
+\bottomrule\end{tabular}\end{center}
+课堂双侧 DW 判别：$d<d_L$ 或 $4-d<d_L$ 则拒绝 $H_0$；两端均大于 $d_U$ 则不拒绝；落在 $d_L,d_U$ 的不确定带则 \textbf{inconclusive}。单侧正相关看 $d$ 是否小，负相关看 $4-d$ 是否小。精确 $d_L,d_U$ 取决于 $n$、自变量数、显著性水平。 
+\begin{pitbox}
+\textbf{DW 不是 }$r_1$；$d=2$ 才对应近似无一阶自相关。DW 的“不确定区间”不可强行判定。DW 主要检验一阶残差自相关，不是全面的白噪声检验；L10 用 Ljung--Box 检验多个滞后阶。
+\end{pitbox}
+\subsection{季节性：加法/乘法，Dummy/Fourier}
+加法季节：$y_t=TR_t+SN_t+\epsilon_t$，季节振幅大致恒定；乘法季节：$y_t\simeq TR_t\times SN_t\times\epsilon_t$，振幅随水平变大，常取 $x_t=\log y_t$ 转成近似加法形式。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\textbf{Dummy Variables（季节虚拟变量）}：周期 $L$，含截距时用 $L-1$ 个虚拟变量避免\eng{dummy variable trap}：
+\[y_t=\beta_0+\beta_1t+\sum_{j=1}^{L-1}\gamma_j D_{j,t}+\epsilon_t.\]
+被省略的季节是\textbf{参考组}；$\gamma_j$ 表示相对参考季节的差异。\textbf{Fourier / Trigonometric}：
+\formula{SN_t=\sum_{k=1}^{K}\left[a_k\sin\left(\frac{2\pi kt}{L}\right)+b_k\cos\left(\frac{2\pi kt}{L}\right)\right]}
+每个频率需要 sin/cos 成对；周期 $L=12$ 的一阶谐波是 $2\pi t/12$；高次谐波刻画更复杂的季节形状。多个 dummy 适合任意季度/月度固定效应，Fourier 用较少参数表示平滑周期性。
+\subsection{非线性增长：先看能否变成线性回归}
+\begin{keybox}
+\[y_t=\beta_0\beta_1^t\epsilon_t\quad\Longrightarrow\quad\log y_t=\log\beta_0+t\log\beta_1+\log\epsilon_t.\]
+$\beta_1$ 是每期增长倍数，增长率为 $\beta_1-1$；若模型写 $y_t=\beta_0e^{bt}\epsilon_t$，增长率为 $e^b-1$。
+\end{keybox}
+讲义另列 \eng{modified exponential} $s+\alpha e^{\beta t}$、\eng{Gompertz} $s\exp(\alpha e^{\beta t})$、\eng{Logistic} $s/(1+\alpha e^{ct})$，共同特征为可以描述增速变化或饱和；logistic 的 $s$ 通常是上限（具体需满足参数符号条件）。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{pitbox}
+不要把“有曲线”直接等于二次趋势；趋势回归的系数是确定的，不随时间自动更新。乘法季节变化先考虑 log；指数增长取 log 后的回归误差定义已发生变化。预测\textbf{原尺度均值}时，直接 $e^{\widehat{\log y}}$ 可能存在反变换偏差。
+\end{pitbox}
+\clearpage
+\section{Lecture 8 · Exponential Smoothing}
+\subsection{为什么需要指数平滑？}
+L7 的趋势/季节参数固定；L8 则允许近期数据逐渐更新 \eng{level}、\eng{trend}、\eng{seasonality}。\textbf{权重随历史远近呈指数衰减}，不是所有期同权。
+\subsection{SES：Simple Exponential Smoothing（无明显趋势与季节）}
+\begin{keybox}
+\formula{L_t=\alpha y_t+(1-\alpha)L_{t-1}=L_{t-1}+\alpha(y_t-L_{t-1})}
+\[\hat y_{t+h\mid t}=L_t,\ h\ge1;\qquad 0<\alpha<1.\]
+展开：$L_t=\alpha y_t+\alpha(1-\alpha)y_{t-1}+\cdots+(1-\alpha)^tL_0$。
+\end{keybox}
+$\alpha$ 大：新观测权重大、响应快、曲线抖动大；$\alpha$ 小：平滑强、响应慢。初始值 $L_0$ 需要设定或优化。一步误差 $e_t=y_t-L_{t-1}$；通过最小化 $SSE=\sum_t e_t^2$ 选择 $\alpha$。
+\begin{exam}
+若 $L_{t-1}=100,y_t=110,\alpha=0.3$，则 $L_t=0.3(110)+0.7(100)=103$。无论 $h=1,2,\ldots$，SES 点预测均为 $103$，不是每远一步都再加 3。
+\end{exam}
+课堂 SES 预测区间近似：$L_n\pm z_{0.025}s\sqrt{1+(h-1)\alpha^2}$，$s=\sqrt{SSE/(n-1)}$。注意这是特定误差假设下的课堂表达。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{Holt：同时平滑 Level 与 Trend}
+\begin{keybox}
+\begin{align*}
+L_t&=\alpha y_t+(1-\alpha)(L_{t-1}+B_{t-1}),\\
+B_t&=\gamma(L_t-L_{t-1})+(1-\gamma)B_{t-1},\\
+\hat y_{t+h\mid t}&=L_t+hB_t.
+\end{align*}
+\textbf{一步预测误差} $e_t=y_t-(L_{t-1}+B_{t-1})$；误差修正形式：
+\[L_t=L_{t-1}+B_{t-1}+\alpha e_t,\quad B_t=B_{t-1}+\alpha\gamma e_t.\]
+\end{keybox}
+$L_t$ 为更新的水平，$B_t$ 为更新斜率。课程用 $\gamma$ 表示斜率平滑参数；有些 Python 包或教材以 $\beta$ 命名。
+\begin{exam}
+假设 $L_{t-1}=50,B_{t-1}=3,y_t=55,\alpha=0.4,\gamma=0.2$：先算 $e_t=55-53=2$；$L_t=53+0.4\cdot2=53.8$；$B_t=3+0.4\cdot0.2\cdot2=3.16$；两步预测 $L_t+2B_t=60.12$。
+\end{exam}
+课堂 Holt 的区间：
+\[\hat y_{n+h}\pm z_{0.025}s\sqrt{1+\sum_{j=1}^{h-1}\alpha^2(1+j\gamma)^2},\quad s=\sqrt{SSE/(n-2)}.\]
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{Holt--Winters：加入季节性}
+\textbf{Additive HW}（季节波动幅度大致恒定），周期 $L$：
+\begin{align*}
+L_t &=\alpha(y_t-S_{t-L})+(1-\alpha)(L_{t-1}+B_{t-1}),\\
+B_t &=\gamma(L_t-L_{t-1})+(1-\gamma)B_{t-1},\\
+S_t &=\delta(y_t-L_t)+(1-\delta)S_{t-L},\\
+\hat y_{t+h\mid t} &=L_t+hB_t+S_{t+h-kL}.
+\end{align*}
+这里 $k$ 选择使季节下标落在最后一个已知完整周期内。\textbf{Multiplicative HW}（季节振幅随水平变化）：
+\begin{align*}
+L_t &=\alpha(y_t/S_{t-L})+(1-\alpha)(L_{t-1}+B_{t-1}),\\
+B_t &=\gamma(L_t-L_{t-1})+(1-\gamma)B_{t-1},\\
+S_t &=\delta(y_t/L_t)+(1-\delta)S_{t-L},\\
+\hat y_{t+h\mid t} &=(L_t+hB_t)\,S_{t+h-kL}.
+\end{align*}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{keybox}
+HW \eng{error-correction form}（讲义原式，加法季节）：
+\[E_t=y_t-(L_{t-1}+B_{t-1}+S_{t-L}),\]
+\[L_t=L_{t-1}+B_{t-1}+\alpha E_t,\qquad B_t=B_{t-1}+\alpha\gamma E_t,\]
+\[S_t=S_{t-L}+(1-\alpha)\delta E_t.\]
+\end{keybox}
+\subsection{模型选择、预测区间、和 ARIMA 的对应关系}
+常见选择：无趋势无季节 $\to$ SES；趋势但无季节 $\to$ Holt；趋势加季节 $\to$ HW。通过训练期 SSE/验证集误差选择平滑参数，用测试集检查外推。L10 告诉我们 SES 与 $ARIMA(0,1,1)$ 相联系，Holt 与 $ARIMA(0,2,2)$ 相联系（参数和初始化需匹配）。
+\begin{pitbox}
+\textbf{(1)} $L_t$ 是\textbf{level}，不要与季节周期 $L$ 混淆。\textbf{(2)} Additive 预测用加号，Multiplicative 用乘号；季节因子不是趋势系数。\textbf{(3)} Holt 是水平 $+$ 斜率两次更新；HW 是水平/斜率/季节三次更新。\textbf{(4)} MA(q) 模型（L9）并不是简单移动平均（L8）。\textbf{(5)} 对照课件的预测区间公式时，检查用的是绝对误差还是相对误差。
+\end{pitbox}
+\clearpage
+\section{Lecture 9 · ARMA / Box--Jenkins}
+\subsection{平稳性、ACF/SAC 和 PACF/SPAC：先懂图的含义}
+\eng{Weak stationarity}：$E(y_t)=\mu$ 不随 $t$ 变化，$\operatorname{Var}(y_t)=\sigma_y^2$ 固定，$\operatorname{Cov}(y_t,y_{t-k})$ 只取决于 lag $k$。趋势、随机游走和未消除的明显季节性可能导致不平稳。\eng{White noise}：$E\epsilon_t=0$，$\operatorname{Var}(\epsilon_t)=\sigma^2$，不同时间不相关。
+\begin{keybox}
+\[\gamma_k=\operatorname{Cov}(y_t,y_{t-k}),\qquad \rho_k=\frac{\gamma_k}{\gamma_0};\qquad r_k=\frac{\sum_{t=k+1}^n(y_t-\bar y)(y_{t-k}-\bar y)}{\sum_{t=1}^n(y_t-\bar y)^2}.\]
+\eng{ACF (theoretical) / SAC (sample)}：滞后 $k$ 的总线性相关（包含间接影响）。\eng{PACF / SPAC}：控制中间 $k-1$ 个滞后后的直接线性关联；PACF$(1)=$ACF$(1)$。
+\end{keybox}
+例如 AR(1) $y_t=0.8y_{t-1}+\epsilon_t$：$\rho_1=0.8,\rho_2=0.64,\rho_3=0.512$，但 $PACF(2)=PACF(3)=0$（理论意义）。样本图中的零不必精确等于 0；看是否超出 $\pm1.96/\sqrt n$ 近似界限（白噪声假设下）。$lag=0$ 的 ACF 恒为 1，\textbf{识别模型时不计入}。
+\subsection{MA(q)：随机冲击的有限记忆}
+本课 MA 的符号约定是\textbf{加号}：
+\[y_t=\delta+\epsilon_t+\theta_1\epsilon_{t-1}+\cdots+\theta_q\epsilon_{t-q}.\]
+因为 $y_t$ 和 $y_{t-k}$ 只有当 $k\le q$ 时共享误差项，故：
+\formula{MA(q):\quad \rho_k=0\ (k>q)\quad\Longrightarrow\quad \mathrm{ACF\ cuts\ off\ at}\ q.}
+\begin{align*}
+MA(1):\quad &\rho_1=\frac{\theta_1}{1+\theta_1^2},\quad\rho_k=0\ (k\ge2),\\
+MA(2):\quad &\rho_1=\frac{\theta_1(1+\theta_2)}{1+\theta_1^2+\theta_2^2},\quad \rho_2=\frac{\theta_2}{1+\theta_1^2+\theta_2^2}.
+\end{align*}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{pitbox}
+MA(q) 的 $q$ 是\textbf{冲击滞后阶数}，不是直接引用过去 $q$ 个 $y$；MA(1) 的 $|\rho_1|\le 0.5$（可逆边界附近取极限）。不同教材和软件的 MA 项可用负号，不可把系数符号不加转换地移植。
+\end{pitbox}
+\subsection{AR(p)：观测值的有限直接记忆}
+\[y_t=\delta+\phi_1y_{t-1}+\cdots+\phi_py_{t-p}+\epsilon_t.\]
+\formula{AR(p):\quad PACF(k)=0\ (k>p)\quad\Longrightarrow\quad\mathrm{PACF\ cuts\ off\ at}\ p.}
+AR(1) 的 ACF 为 $\rho_k=\phi_1^k$：$0<\phi_1<1$ 单调递减；$-1<\phi_1<0$ 正负交替递减。AR(2) 的 ACF 可以是\eng{damped oscillation}（阻尼振荡），但 PACF 仍在 lag 2 后截尾。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{ARMA(p,q)、后移算子与可逆性}
+\[y_t=\delta+\sum_{i=1}^{p}\phi_i y_{t-i}+\epsilon_t+\sum_{j=1}^{q}\theta_j\epsilon_{t-j}.\]
+\eng{Backshift}：$\mathcal B y_t=y_{t-1}$，$\mathcal B^k y_t=y_{t-k}$。定义：
+\[\phi(\mathcal B)=1-\phi_1\mathcal B-\cdots-\phi_p\mathcal B^p,\qquad\theta(\mathcal B)=1+\theta_1\mathcal B+\cdots+\theta_q\mathcal B^q.\]
+\formula{\phi(\mathcal B)y_t=\delta+\theta(\mathcal B)\epsilon_t.}
+纯 AR 的 ACF 拖尾、PACF 截尾；纯 MA 恰好相反；\textbf{通常 ARMA 两者都拖尾}，需进一步候选比较。AR(1) 平稳条件 $|\phi_1|<1$；MA(1) 可逆条件 $|\theta_1|<1$。一般 AR/MA 多项式在 $z$ 平面对应的根需在单位圆\textbf{外}（模 $>1$）；MA 可逆确保误差可由观测反推。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{keybox}[title={Lecture 9 截尾/拖尾识别：背下整张表}]
+\begin{center}\thick\begin{tabularx}{0.97\linewidth}{lXX}\toprule
+模型 & ACF / SAC & PACF / SPAC \\ \midrule
+$AR(p)$ & 拖尾（可能振荡） & \textbf{在 $p$ 后截尾} \\
+$MA(q)$ & \textbf{在 $q$ 后截尾} & 拖尾 \\
+$ARMA(p,q)$ & 通常拖尾 & 通常拖尾 \\
+\bottomrule\end{tabularx}\end{center}
+\end{keybox}
+\begin{pitbox}
+\textbf{(1)} 不要把 AR 和 MA 截尾位置记反；\textbf{(2)} PACF(1)=0.8 说的是 lag=1 的部分自相关为 0.8，不是 “PACF 只有 0.8 个滞后”；\textbf{(3)} 孤立样本尖峰不代表理论截尾规律失效；\textbf{(4)} ARMA 双拖尾不能唯一反推 $(p,q)$；\textbf{(5)} 分析 ACF/PACF 前须先处理非平稳（L10）。
+\end{pitbox}
+\clearpage
+\section{Lecture 9--10 特别专题 · ACF/PACF 六道识图题}
+\begin{keybox}[title={看图四步，不需要背六张图}]
+\textbf{(1) 看 lag 0 以外的柱子是否越过置信带；(2) 看 ACF 是否有明确截尾；(3) 看 PACF 是否有明确截尾；(4) 有季节时单独看 $L,2L,3L$。} “截尾”是理论规律，样本中表现为截尾点之后\textbf{绝大部分}柱子不显著。
+\end{keybox}
+\subsection*{Q1：AR(1) · PACF lag 1 截尾}
+\figone[0.94]{Practice_Q1.png}{模拟识图 Q1：ACF 逐渐衰减；PACF 主要只有 lag 1 显著。}
+\textbf{答案：}$AR(1)$。顺序：PACF 在 lag 1 后基本落入置信区间 $\Rightarrow p=1$；ACF 拖尾。\textbf{不要}因 ACF lag 2、3 仍有正柱子误判为 AR(3)：它们可以是 lag 1 传递的\emph{间接}相关。
+\subsection*{Q2：MA(2) · ACF lag 2 截尾}
+\figone[0.94]{Practice_Q2.png}{模拟识图 Q2：ACF 在 lag 1、2 有系统相关，之后基本不显著；PACF 拖尾。}
+\textbf{答案：}$MA(2)$。先看左图截尾位置 $q=2$，而不是根据右图偶尔的显著柱子随便增大 $p$。\textbf{关键}：MA 项是过去的随机误差 $\epsilon_{t-j}$。
+\subsection*{Q3：AR(2) · ACF 阻尼振荡}
+\figone[0.94]{Practice_Q3.png}{模拟识图 Q3：ACF 正负交替且逐渐衰减；PACF 到 lag 2 截尾。}
+\textbf{答案：}$AR(2)$。\textbf{关键陷阱}：ACF 拖尾可以上下振荡，不必永远正且单调下降。判断阶数依旧以 PACF 截尾点为准。
+\subsection*{Q4：ARMA(1,1) · 双拖尾}
+\figone[0.94]{Practice_Q4.png}{模拟识图 Q4：ACF/PACF 均拖尾；来源模型为 ARMA(1,1)。}
+\textbf{答案：}本题设计时使用 $ARMA(1,1)$；在\textbf{真实考试中}，双拖尾只够支持“优先考虑 ARMA 类候选”，不一定能唯一确定 $(1,1)$。需要 AIC/BIC、残差诊断、预测比较。
+\subsection*{Q5：季节 AR(1) · 只看季节 PACF}
+\figone[0.94]{Practice_Q5.png}{模拟识图 Q5：月度平稳数据，PACF 季节 lag 12 截尾，ACF 季节位置逐渐衰减。}
+\textbf{答案：}$SARIMA(0,0,0)(1,0,0)_{12}$。因为\textbf{季节 PACF 在 12 截尾} $\Rightarrow P=1$；季节 ACF 在 12、24、36 拖尾。$P=1$ 对应直接使用 $y_{t-12}$，\textbf{不是} $y_{t-1}$。
+\subsection*{Q6：季节 MA(1) · 只看季节 ACF}
+\figone[0.94]{Practice_Q6.png}{模拟识图 Q6：月度平稳数据，ACF 季节 lag 12 截尾，PACF 季节位置逐渐衰减。}
+\textbf{答案：}$SARIMA(0,0,0)(0,0,1)_{12}$。因为\textbf{季节 ACF 在 12 截尾} $\Rightarrow Q=1$。lag 12 系数的负号或正号表示相关方向，而\textbf{不是}季节阶数为负。
+\begin{pitbox}[title={六题之后的终极提醒}]
+L9 识图主要求 $p,q$；L10 SARIMA 在已做必要差分之后还要求 $P,Q$。但是 \textbf{$d,D$ 不是从“ACF 截尾于几阶”直接读出的}，要对原始序列和差分序列比较后决定。季节位置出现 11、13 的旁瓣还可能来自普通与季节 MA 多项式乘积。
+\end{pitbox}
+\clearpage
+\section{Lecture 10 · ARIMA, SARIMA and Model Diagnostics}
+\subsection{差分、单位根、平稳性/可逆性}
+\eng{Random walk}: $y_t=y_{t-1}+\epsilon_t$，AR 系数为 1，存在\eng{unit root}，方差随时间增长。一阶差分使之成为 $\Delta y_t=\epsilon_t$，即 $ARIMA(0,1,0)$。
+\begin{keybox}
+\begin{align*}
+\Delta y_t&=(1-\mathcal B)y_t=y_t-y_{t-1},\\
+\Delta^2y_t&=(1-\mathcal B)^2y_t=y_t-2y_{t-1}+y_{t-2},\\
+\Delta_Ly_t&=(1-\mathcal B^L)y_t=y_t-y_{t-L},\\
+\Delta\Delta_Ly_t&=y_t-y_{t-1}-y_{t-L}+y_{t-L-1}.
+\end{align*}
+\end{keybox}
+$ARIMA(p,d,q)$ 表示\textbf{差分 $d$ 次后的序列}满足 ARMA$(p,q)$；$\phi(\mathcal B)(1-\mathcal B)^dy_t=\delta+\theta(\mathcal B)\epsilon_t$。$d=0$ 不是必须差分；$d=2$ 也不是“使用 lag 2 的观测值”。
+\textbf{ADF} 原假设有单位根，p 小支持拒绝单位根；\textbf{KPSS} 原假设平稳，p 小则反对平稳。结合时序图/ACF 判断，注意小样本功效和检验版本。\textbf{过度差分}：在已平稳序列上继续差分可能制造强的 lag 1 负相关（常见约 $-0.5$）。
+\begin{pitbox}
+对 \eng{AR(1)} $y_t=\phi y_{t-1}+\epsilon_t$，$|\phi|<1$ 是平稳条件；$\phi=1$ 是单位根。一般 AR 的特征根在单位圆\textbf{外}。软件 \texttt{statsmodels} 可能显示 MA 项为加号，本讲义也用加号；另一部分教材用负号，比较 $\alpha$ 与 MA 系数时必须先统一约定。
+\end{pitbox}
+\subsection{ARIMA 多步预测：未来误差取 0，预测后要逆差分}
+条件点预测遵循：已知历史值用实际值，未来未知 $y$ 用先前预测值，未来 $\epsilon$ 的条件期望为 0。例如：
+\[y_t=10+0.6y_{t-1}+\epsilon_t+0.4\epsilon_{t-1}\ \Longrightarrow\ \hat y_{t+1|t}=10+0.6y_t+0.4\hat\epsilon_t.\]
+若 $z_t=y_t-y_{t-1}$，则 $\hat y_{t+h|t}=\hat y_{t+h-1|t}+\hat z_{t+h|t}$（递推、已知取真实值）。
+\begin{center}\thick\begin{tabularx}{0.95\linewidth}{lXX}\toprule
+$d$ & 长期点预测典型形状 & 预测误差标准差（典型阶数）\\\midrule
+0 & 回到均值（平稳 ARMA） & 趋于常数 \\
+1，无 drift & 逐渐平坦 & $O(\sqrt h)$ \\
+1，有 drift & 长期线性 & $O(\sqrt h)$ \\
+2 & 继续线性趋势 & $O(h^{3/2})$ \\
+\bottomrule\end{tabularx}\end{center}
+\subsection{估计、模型选择、残差检验}
+\textbf{Moment method}：匹配 TAC 与 SAC，AR(1) $\hat\phi\simeq r_1$；MA(1) 解 $r_1=\theta/(1+\theta^2)$ 时要选择\textbf{可逆根}。\textbf{Least squares}：最小化一步误差 $SSE=\sum(y_t-\hat y_{t|t-1})^2$。\textbf{MLE}：最大化观测序列的似然。
+\formula{AIC=-2\log\hat L+2k,\qquad BIC=-2\log\hat L+k\log n}
+AIC/BIC \textbf{越小越好}；BIC 随 $n$ 增大倾向较简单模型。\textbf{同一响应变量、同一数据、可比的似然定义}下比较；不同差分/变换时不应直接机械比较程序打印的值。
+\eng{Residual diagnostics}: $e_t=y_t-\hat y_{t|t-1}$。合格模型剩余误差应近似白噪声。\textbf{RSAC/RSPAC} 检查残差结构；\eng{Ljung--Box}：
+\formula{Q^*=n'(n'+2)\sum_{\ell=1}^{K}\frac{r_\ell(e)^2}{n'-\ell}\quad\overset{H_0}{\approx}\quad\chi^2_{K-p-q-P-Q}}
+$H_0$：到考察滞后 $K$ 为止残差无自相关；\textbf{p 小（如 $<0.05$）拒绝}，模型可能不足；p 大只是未发现显著残差相关，并非证明模型真。还检查残差方差稳定与 Q--Q 图。
+\subsection{季节 ARIMA 记号与乘法结构}
+\begin{keybox}
+\formula{SARIMA(p,d,q)(P,D,Q)_L}
+\[\phi_p(\mathcal B)\Phi_P(\mathcal B^L)(1-\mathcal B)^d(1-\mathcal B^L)^Dy_t=\delta+\theta_q(\mathcal B)\Theta_Q(\mathcal B^L)\epsilon_t.\]
+普通项滞后 1、2、3；季节项滞后 $L,2L,3L$。月度 $L=12$，季度 $L=4$。
+\end{keybox}
+\begin{center}\thick\begin{tabularx}{0.98\linewidth}{lXX}\toprule
+组件 & 识别图像 & 代表解释 \\\midrule
+Regular AR$(p)$ & PACF 普通滞后于 $p$ 截尾 & $y_{t-1},\ldots,y_{t-p}$ \\
+Regular MA$(q)$ & ACF 普通滞后于 $q$ 截尾 & $\epsilon_{t-1},\ldots,\epsilon_{t-q}$ \\
+Seasonal AR$(P)$ & PACF 季节滞后于 $PL$ 截尾 & $y_{t-L},\ldots,y_{t-PL}$ \\
+Seasonal MA$(Q)$ & ACF 季节滞后于 $QL$ 截尾 & $\epsilon_{t-L},\ldots,\epsilon_{t-QL}$ \\
+\bottomrule\end{tabularx}\end{center}
+\textbf{Airline model} $SARIMA(0,1,1)(0,1,1)_{12}$：
+\begin{align*}
+(1-\mathcal B)(1-\mathcal B^{12})y_t&=(1+\theta\mathcal B)(1+\Theta\mathcal B^{12})\epsilon_t,\\
+y_t-y_{t-1}-y_{t-12}+y_{t-13}&=\epsilon_t+\theta\epsilon_{t-1}+\Theta\epsilon_{t-12}+\theta\Theta\epsilon_{t-13}.
+\end{align*}
+\textbf{Cross term} $\theta\Theta\epsilon_{t-13}$ 不是自由的 MA(13) 系数。普通/季节 MA 乘积可在 lag $L\pm1$ 形成\eng{side-lobes}；不要看到 lag 13 就认定 $q=13$。
+\subsection{Hotel Room Demand：案例分析与候选模型选择}
+\textbf{数据}：月度 1977--1990，共 168 个点，最后 24 个月作为测试集。原始序列趋势上升且季节振幅变大。先 $x_t=\log y_t$ 稳定季节绝对振幅；再比较不同差分：普通差分无法清除季节 lag 12、24、36 的长相关；只做季节差分效果较好；双重差分有过度差分迹象。于是：
+\formula{z_t=(1-\mathcal B^{12})\log y_t,\qquad d=0,\ D=1,\ L=12.}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{keybox}[title={从图到模型：考试最重要的一步}]
+\textbf{右侧 PACF（SPAC）}：普通 lag 1 和 lag 3 重要，lag 3 后普通部分无明确持续结构 $\Rightarrow$ 初始候选 $p=3$；lag 2 无明显尖峰不排除 AR(3)，且 lag 5 接近边界。\textbf{左侧 ACF（SAC）}：lag 12 单个明显负尖峰、之后 lag 24、36 无同样持续季节 ACF 结构 $\Rightarrow$ 初始候选 $Q=1$。先设 $q=P=0$。所以
+\formula{SARIMA(3,0,0)(0,1,1)_{12}.}
+图中也可能有单个其他显著柱子，\textbf{不是数学上完美截尾；这是 tentative model，不是唯一结论。}
+\end{keybox}
+\textbf{拟合}：在 $z_t$ 上用 AR(3)+季节 MA(1)；讲义季节 MA 系数约 $-0.53$，常数约 $0.027$。由于 $z_t=\log y_t-\log y_{t-12}$，若 $E(z_t)\approx0.034$，解释为每年同月对数增长约 $3.4\%$（原尺度 $e^{0.034}-1$）。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\textbf{诊断}：RSAC/RS PAC 无明显残余模式，Ljung--Box $p>0.05$；比较相同变换与差分下的相邻 AR、MA 候选模型：AR(3) AIC 较低，部分简单候选也可能接近。\textbf{预测}：先算 $\hat z$，再 $\widehat{\log y}_{t+h}=\widehat{\log y}_{t+h-12}+\hat z_{t+h}$（对已知历史用真实值），最后逆 log。$\exp(\widehat{\log y})$ 对数正态假设下对应原尺度中位数；均值需 $\exp(\widehat{\log y}+\sigma_h^2/2)$ 修正。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\begin{pitbox}
+\textbf{(1)} 取 log 主要稳定振幅，\textbf{不等于}差分；\textbf{(2)} Lag 12 的负峰决定季节 MA 候选方向，不意味着 $Q=-1$；\textbf{(3)} $p=3$ 并不要求 lag 1、2、3 每根 PACF 都显著；\textbf{(4)} 测试期必须在训练期之后，不能把测试数据用于选模型；\textbf{(5)} 预测区间覆盖率低意味着不确定性被低估。
+\end{pitbox}
+\subsection{Regression with ARMA Errors：连接 Lecture 7}
+\[y_t=\mathbf x_t^\top\bm\beta+\xi_t,\qquad \phi(\mathcal B)\xi_t=\theta(\mathcal B)\epsilon_t.\]
+回归部分解释确定性趋势、季节或外生变量；ARMA 部分解释\textbf{回归残差中仍存在的相关结构}。普通 OLS 在误差自相关时常规标准误可能无效，且没有充分利用误差动态。\eng{Deterministic trend/season}：固定的时间函数；\eng{stochastic trend/season}：受到冲击后可永久改变水平/模式。课程酒店案例中回归+ARMA 误差的预测区间覆盖率曾约为 79\%，提醒固定季节结构可能过于刚性。
+\begin{keybox}[title={Box--Jenkins Workflow：通用题目答题模板}]
+\textbf{Plot $\to$ Transform $\to$ Difference $\to$ Identify $\to$ Estimate $\to$ Diagnose $\to$ Select $\to$ Forecast / Test}。变换考虑 log；差分求 $d,D$；ACF/PACF 求候选 $p,q,P,Q$；残差 Ljung--Box 与 AIC/BIC 验证；最后逆差分/逆变换并对照 seasonal naive 与 HW 基线。
+\end{keybox}
+\clearpage
+\section{Lecture 11 · Neural Networks, RNN and LSTM}
+\subsection{从 AR(p) 到监督学习：窗长 p 就是输入维度}
+AR$(p)$：$y_t=\delta+\sum_{i=1}^p\phi_i y_{t-i}+\epsilon_t$。把历史序列转换为监督学习样本：$\mathbf x_t=(y_{t-1},\ldots,y_{t-p})$，标签 $y_t$。滑动窗长 $p$，对于 $n$ 个观测点可构造 $n-p$ 个一步预测样本（无额外留出）。
+\begin{keybox}
+\[\hat y_t=b+\mathbf w^\top\mathbf x_t.\]
+\textbf{单个线性神经元 = 线性 AR(p)}：$w_i\leftrightarrow\phi_i$，$b\leftrightarrow\delta$。训练最小化 MSE/SSE；梯度下降 $w\leftarrow w-\eta\,\partial SSE/\partial w$。$\eta$ 是学习率，\textbf{不是}平滑常数。
+\end{keybox}
+\textbf{NNAR（Nonlinear autoregression）}：隐层 $h_j=\sigma(c_j+\mathbf w_j^\top\mathbf x_t)$，输出 $\hat y_t=b+\sum_jv_jh_j$。若 $\sigma(z)=z$，无论叠多少线性层仍是线性函数；非线性激活使其可表达非对称周期、非线性关系等。神经网络相较 ARMA 多许多参数，小样本更易过拟合，需\textbf{scaling}、训练/验证/测试划分、\eng{early stopping}。
+\begin{exam}
+输入 $[y_{t-1},y_{t-2},y_{t-3}]$，输出一个标量预测：这是\textbf{一次前向的 NNAR(3)}，不是 RNN；若只有无激活线性层，等价 AR(3)。窗口长 36 并不意味着需要 36 个网络层。
+\end{exam}
+\subsection{RNN：保留隐藏状态，而不是固定窗口的全部原始值}
+\begin{keybox}
+\begin{align*}
+\mathbf h_t&=\sigma(W\mathbf h_{t-1}+U y_t+\mathbf b),\\
+\hat y_{t+1}&=V\mathbf h_t+c.
+\end{align*}
+\textbf{State} $\mathbf h_t$ 把过去历史压缩进一个向量；$W$ 决定记忆如何延续，$U$ 输入当前新信息，$V$ 将隐藏状态映射为预测。\textbf{参数跨时间共享}，不是每一期重估一组全新参数。
+\end{keybox}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\textbf{Linear RNN = SES 的特例}：令状态维度为 1、$\sigma(z)=z$、$W=1-\alpha$、$U=\alpha$、$V=1$，则 $h_t=(1-\alpha)h_{t-1}+\alpha y_t=L_t$。因此课堂联系：$\text{ARIMA}(0,1,1)\leftrightarrow\text{SES}\leftrightarrow$ 一维线性 RNN（记得 MA 正负号约定）。
+\textbf{线性状态空间与 ARMA}：展开 $\hat y_{t+1}=c'+\sum_{k\ge0}(VW^kU)y_{t-k}$，其权重 $\psi_k=VW^kU$，相当于无限 AR 线性滤波器；$W$ 的特征值在单位圆内对应稳定遗忘。\textbf{不是说任意非线性 RNN 都等价 ARMA。}
+\subsection{BPTT 和梯度消失 / 爆炸}
+\eng{Backpropagation Through Time}（时间反向传播）把 RNN 展开，梯度链式相乘：
+\formula{\frac{\partial\mathbf h_t}{\partial\mathbf h_{t-k}}=\prod_{j=t-k+1}^{t}\mathrm{diag}(\sigma'(\mathbf a_j))W.}
+标量线性情形就是 $W^k$：$|W|<1$ 梯度随 $k$ 指数衰减（\eng{vanishing gradient}），$|W|>1$ 梯度可能爆炸；前者远期记忆难保留，后者训练不稳定。LSTM/GRU 利用门控和加法状态通路缓解此问题；训练常借助梯度裁剪。
+\subsection{LSTM：Cell State 的加法记忆通道}
+\begin{keybox}
+\begin{align*}
+\mathbf f_t&=\mathrm{sigmoid}(W_f\mathbf h_{t-1}+U_fx_t+\mathbf b_f) &&\text{forget gate},\\
+\mathbf i_t&=\mathrm{sigmoid}(W_i\mathbf h_{t-1}+U_ix_t+\mathbf b_i) &&\text{input gate},\\
+\tilde{\mathbf c}_t&=\tanh(W_c\mathbf h_{t-1}+U_cx_t+\mathbf b_c) &&\text{candidate},\\
+\mathbf c_t&=\mathbf f_t\odot\mathbf c_{t-1}+\mathbf i_t\odot\tilde{\mathbf c}_t &&\text{cell update},\\
+\mathbf o_t&=\mathrm{sigmoid}(W_o\mathbf h_{t-1}+U_ox_t+\mathbf b_o) &&\text{output gate},\\
+\mathbf h_t&=\mathbf o_t\odot\tanh(\mathbf c_t). &&\text{hidden state}
+\end{align*}
+\end{keybox}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+门函数 sigmoid 输出 $(0,1)$ 作为“保留/写入比例”，candidate 使用 tanh 输出 $(-1,1)$；$\odot$ 表示逐元素乘。$\mathbf f_t\approx1$ 时保留旧记忆，$\approx0$ 时忘掉；$\mathbf i_t$ 决定写入多少；$\mathbf o_t$ 决定状态向外暴露多少。\textbf{LSTM 是自适应 SES}：若 $f_t=1-\alpha,i_t=\alpha,\tilde c_t=y_t$，则 $c_t=(1-\alpha)c_{t-1}+\alpha y_t$。真实 LSTM 的门随时间、数据变化。
+\subsection{GRU：更简化的门控单元}
+\begin{keybox}
+\begin{align*}
+\mathbf z_t&=\mathrm{sigmoid}(W_z\mathbf h_{t-1}+U_zx_t) &&\text{update},\\
+\mathbf r_t&=\mathrm{sigmoid}(W_r\mathbf h_{t-1}+U_rx_t) &&\text{reset},\\
+\tilde{\mathbf h}_t&=\tanh\{W(\mathbf r_t\odot\mathbf h_{t-1})+Ux_t\},\\
+\mathbf h_t&=(1-\mathbf z_t)\odot\mathbf h_{t-1}+\mathbf z_t\odot\tilde{\mathbf h}_t.
+\end{align*}
+\end{keybox}
+\textbf{GRU 不另设 cell state $c_t$}；讲义使用 $z_t$ 作为\emph{新 candidate 的更新权重}，也可写成 $\mathbf h_t=\mathbf h_{t-1}+\mathbf z_t\odot(\tilde{\mathbf h}_t-\mathbf h_{t-1})$，与 SES 误差修正形式相似。不同教材可能把 GRU 的 $z_t$ 定义为“保留旧状态”的门，\textbf{考试照教师公式}。
+\subsection{神经网络预测、残差和区间}
+\textbf{多步预测}：\eng{recursive}（反复预测一步并回填，误差累积），\eng{direct}（一次输出 $H$ 个 horizon），\eng{seq2seq}（编码器读历史、解码器逐步输出）。无论网络多复杂，\textbf{残差 SAC/SPAC 与 Ljung--Box 仍然适用}。预测区间通常需要\eng{distributional head}（$\mu,\sigma$）、quantile loss、ensemble/bootstrap 等；点预测网络不会自动给可信区间。
+\begin{pitbox}
+\textbf{(1)} RNN 的“长记忆”在理论上无限，但梯度消失让实际长依赖难学；\textbf{(2)} $f_t$ 是保留旧 cell state 的比例，\textbf{不是}直接输出权重；\textbf{(3)} sigmoid 多用于 gates，tanh 多用于 candidate/state；\textbf{(4)} LSTM cell state $c_t$ 与 hidden state $h_t$ 不是同一个变量；\textbf{(5)} 在短且单一的系列（讲义 sunspots）中，优秀 ARIMA 往往比大网络更稳。
+\end{pitbox}
+\clearpage
+\section{Lecture 12 · Attention, Transformers and Beyond}
+\subsection{课程数据与神经预测的统一前处理}
+讲义使用 \eng{Mauna Loa CO$_2$} 月度序列，先比较 seasonal ARIMA 基线，再训练 neural models。给定窗口长 $L$，预测长 $H$，常用\eng{last-value centering}：
+\formula{x_{t,i}=\frac{y_{t-L+i}-y_t}{s},\qquad\mathrm{target}_h=\frac{y_{t+h}-y_t}{s}.}
+网络预测相对最新水平的变化；输出还原时 $\hat y_{t+h}=y_t+s\hat x_{t+h}$。零预测相当于 random-walk 基线 $\hat y_{t+h}=y_t$。同课 \eng{Linear model}：$\hat y_{t+h}-y_t=\sum_{i=0}^{L-1}w_{h,i}(y_{t-i}-y_t)$，是\textbf{每个 horizon 分别预测}的直接线性 AR 类模型；任何深模型都应和此简单基线比较。
+\subsection{Activation functions：选择输出值的范围}
+\begin{center}\small\thick\begin{tabularx}{0.99\linewidth}{lXX}
+\toprule
+名称 & 定义 / 范围 & 用途与陷阱\\\midrule
+Identity & $\sigma(z)=z$；全实数 & 回归预测输出层；连续线性层仍为线性 \\
+Sigmoid & $(1+e^{-z})^{-1}\in(0,1)$ & 门控/概率；导数至多 $1/4$，容易饱和 \\
+Tanh & $\tanh z\in(-1,1)$ & RNN candidate/state；远离 0 时梯度变小 \\
+ReLU & $\max(0,z)$ & CNN/深层；$z<0$ 梯度 0，dead unit \\
+GELU & $z\Phi(z)$ & Transformer FFN；平滑 ReLU \\
+Softplus & $\log(1+e^z)>0$ & 标准差/强度等正数输出 \\
+Softmax & $p_i=e^{z_i}/\sum_j e^{z_j}$ & 注意力权重/多分类；和为 1 \\
+\bottomrule\end{tabularx}\end{center}
+\begin{keybox}
+\[\mathrm{sigmoid}'(z)=\mathrm{sigmoid}(z)(1-\mathrm{sigmoid}(z)),\quad (\tanh z)'=1-\tanh^2z,\]
+\[\mathrm{softmax}(z_i/\tau)=\frac{e^{z_i/\tau}}{\sum_je^{z_j/\tau}}.\]
+$\tau\to0$ 近似选最大 score；$\tau\to\infty$ 近似平均；给全部 score 加同一常数不改变 softmax。SES 的固定衰减权 $\alpha(1-\alpha)^k$ 也可看作某种固定 score 的 softmax。
+\end{keybox}
+\subsection{TCN：Causal Dilated Convolution}
+\eng{Convolution = backshift polynomial}：$z_t=\sum_{j=0}^{k-1}w_jy_{t-jr}$；卷积核宽度 $k$，膨胀系数 $r$。普通差分 $(1-\mathcal B)$ 相当于核 $(1,-1)$、dilation 1；季节差分 $(1-\mathcal B^{12})$ 对应相同核、dilation 12。\textbf{Causal} 表示只允许看 $t$ 及更早，绝不能在时刻 $t$ 使用未来 $y_{t+1}$（\eng{look-ahead leakage}）。
+\begin{keybox}
+\[z_t=\sigma\left(b+\sum_{j=0}^{k-1}w_jx_{t-jr}\right),\qquad R=1+(k-1)\sum_{\ell=1}^{D}r_\ell.\]
+$R$ 是理论\eng{receptive field} 最大覆盖长度；\textbf{不是}保证每一个中间 lag 都可达。若 $k=2,r=(1,2,4,8)$，$R=16$；通过二进制求和可覆盖 lag 0--15。
+\end{keybox}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+讲义另一设计 $r=(1,2,4,12,24),k=2$，$R=44$，但因可达 lag 只能是若干 dilation 之和，lag 8--11、20--23 等可能\textbf{无法访问（gridding）}；可扩大核宽、调整 dilation 日程。TCN 能并行训练；RNN 的状态随时间递推，不能像纯卷积那样完全并行。
+\subsection{Seq2Seq：Encoder--Decoder 与 Teacher Forcing}
+\textbf{Encoder} 把输入窗口编码为 context $\mathbf c$；\textbf{Decoder} 从 $\mathbf c$ 开始逐步预测 $H$ 期：
+\[\mathbf h_s=LSTM_{enc}(\mathbf h_{s-1},y_s),\ \mathbf c=\mathbf h_t,\qquad\mathbf g_h=LSTM_{dec}(\mathbf g_{h-1},\hat y_{t+h-1}).\]
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\textbf{Teacher forcing}：训练时把\textbf{真实} $y_{t+h-1}$ 输入下一解码步骤，训练稳定；实际预测只能输入\textbf{模型预测值}，产生\eng{exposure bias}（训练与推理不一致）。\textbf{Free running}：训练时也回填模型预测值，优化更难但更接近预测时行为。课件 CO$_2$ 实验中 teacher forcing 反而效果较好，说明\textbf{不能单靠理论断言 free running 必然更优}。
+\subsection{Seq2Seq Attention：解除单一 context bottleneck}
+传统 Seq2Seq 只用固定大小的 $\mathbf c$ 压缩全部历史，长序列信息丢失。\eng{Attention} 在每个 decoder horizon $h$ 为不同历史 $s$ 计算权重：
+\begin{keybox}
+\[e_{h,s}=\frac{\mathbf g_{h-1}^\top\mathbf h_s}{\sqrt d},\qquad \alpha_{h,s}=\frac{e^{e_{h,s}}}{\sum_{u}e^{e_{h,u}}},\qquad \mathbf c_h=\sum_s\alpha_{h,s}\mathbf h_s.\]
+$\alpha_{h,s}\ge0$，$\sum_s\alpha_{h,s}=1$；每个预测 horizon 有\textbf{自己的} context，而不是共用一根固定向量。
+\end{keybox}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+比较历史权重：简单 MA 固定等权；SES 固定指数衰减；AR 系数在拟合后固定（可正可负）；Attention 权重随当前输入改变，非负且归一化。注意\textbf{Attention weight 不是 ACF，也不直接等于因果影响大小}。
+\subsection{Transformer：Q / K / V 和 Causal Mask}
+Transformer 不再依赖 RNN 按时间递推，使用\eng{Self-Attention} 计算全体历史位置间的关联：
+\begin{keybox}
+\[\mathbf q_t=W_Q\mathbf x_t,\qquad\mathbf k_s=W_K\mathbf x_s,\qquad\mathbf v_s=W_V\mathbf x_s,\]
+\formula{\alpha_{t,s}=\mathrm{softmax}_{s\le t}\left(\frac{\mathbf q_t^\top\mathbf k_s}{\sqrt{d_k}}\right),\quad\mathbf z_t=\sum_{s\le t}\alpha_{t,s}\mathbf v_s.}
+$Q$（Query）问要找什么，$K$（Key）告诉当前位置是否匹配，$V$（Value）提供被加权读取的信息。$1/\sqrt{d_k}$ 抑制维度增大造成 score 过大与 softmax 过度饱和。
+\end{keybox}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Transformer architecture figure omitted in the public edition.}}\par
+\textbf{必备组件}：\eng{positional encoding}（注意力本身不知道时间顺序）、\eng{causal mask}（不得看未来）、\eng{multi-head attention}（不同头学习不同相关模式）、\eng{residual + LayerNorm + FFN}（稳定训练），并行但标准全注意力计算/内存约 $O(L^2)$。
+\[PE_{s,2i}=\sin\left(\frac{s}{10000^{2i/d}}\right),\qquad PE_{s,2i+1}=\cos\left(\frac{s}{10000^{2i/d}}\right).\]
+\textbf{Mask 的两类题}：在自回归 Decoder，位置 $t$ 只能读 $s\le t$；在仅以完整历史窗口为输入、直接输出未来的 Encoder-only 预测器，历史窗内部全可见并不一定构成泄漏，重点是\textbf{不能包含预测时未知的未来值}。
+\subsection{Minimal Transformer：一个 Attention Head 究竟学什么？}
+讲义最小模型：$\mathbf e_s=x_s\mathbf a+\mathbf p_s$，投影成 $q,k,v$，然后 $\alpha_s=\mathrm{softmax}(q^\top k_s/\sqrt d)$；多步输出 $\hat y_{t+h}=\mathbf w_h^\top\sum_s\alpha_s\mathbf v_s+b_h$。展开后：
+\[\hat y_{t+h}=\underbrace{\beta_h\sum_s\alpha_s x_s}_{\text{data-weighted average}}+\underbrace{\sum_s\alpha_s\gamma_{h,s}}_{\text{position-dependent lookup}}+b_h.\]
+当输入中心化为 $x_s=(y_s-y_t)/s$ 且当前 $x_t=0$ 时，讲义进一步写成：
+\[\alpha_s=\frac{\pi_s e^{c x_s}}{\sum_u\pi_u e^{c x_u}},\quad\pi_s=\mathrm{softmax}_s(d_s).\]
+它可理解为\textbf{固定 lag 偏好 $\pi_s$ 乘上数据相关的调整项}；图中学习到季节峰值附近的动态注意力，并不意味着 ACF 在同一 lag 也一定最大。
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\subsection{常见 Time-Series Deep Models：知道分别解决什么}
+\begin{center}\small\thick\begin{tabularx}{0.99\linewidth}{lX}
+\toprule
+模型 & 最重要的区别/课堂结论 \\\midrule
+Informer & 稀疏 attention，降低长序列成本。\\
+Autoformer & 趋势/季节分解 + auto-correlation 跨 lag 聚合。\\
+FEDformer & 在频域（Fourier）中建模，减少长序列负担。\\
+DLinear & moving-average 分解为 trend/remainder，两条\textbf{线性}预测头后相加。\\
+PatchTST & 把连续点合成 patch/token，减少 token 数；学习局部形状。\\
+iTransformer & 把\textbf{变量}作为 token，在多变量维度建模关联。\\
+N-BEATS & 堆叠 basis/backcast/forecast blocks；趋势多项式和季节 Fourier basis。\\
+DeepAR & RNN 输出分布参数 $\mu_t,\sigma_t$，用概率似然训练，适合多序列。\\
+TFT & LSTM、attention、变量选择、已知未来协变量、分位数输出。\\
+S4 / Mamba & 状态空间递推与长卷积相联系；Mamba 引入输入相关选择机制。\\
+Chronos / TimesFM & 预训练 time-series foundation models，可零样本迁移。\\
+\bottomrule\end{tabularx}\end{center}
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\par\smallskip\noindent{\footnotesize\color{graytext}\textit{Figure omitted in public edition: see the adjacent conceptual explanation.}}\par\smallskip
+\textbf{DeepAR}：$y_{t+1}|\text{past}\sim N(\mu_{t+1},\sigma_{t+1}^2)$，其中 $(\mu_t,\sigma_t)=g(\mathbf h_t)$；通过极大化条件概率训练。\textbf{预测区间校准}：95\% 区间在测试期应覆盖约 95\% 真值；小样本神经概率模型常低覆盖（区间太窄），需要足够数据、分位数训练、校准。
+\begin{pitbox}
+\textbf{(1)} Attention 是数据相关的归一化权重，既不是 AR 系数也不等于因果解释；\textbf{(2)} softmax 对\textbf{整组 score}归一化，sigmoid 对\textbf{单个门}映射到 $(0,1)$；\textbf{(3)} 不使用 positional information 的 attention 不天然理解时序顺序；\textbf{(4)} $R=44$ 不代表 TCN 包含所有 44 个滞后；\textbf{(5)} 任何网络都应和 SARIMA / DLinear / seasonal naive 比较，而不是仅看训练 MSE；\textbf{(6)} 95\% 置信度标签并不等于实际 coverage 自动为 95\%。
+\end{pitbox}
+\clearpage
+\section{六章跨章节综合速查}
+\subsection{方法之间的内在联系（最易考概念题）}
+\begin{center}\small\thick\begin{tabularx}{0.99\linewidth}{lXX}
+\toprule
+古典方法 & 深度学习对应 & 相同点 / 差别 \\\midrule
+AR$(p)$ & 线性神经元 / NNAR & 同一组 lag 输入；激活函数增加非线性 \\
+SES & 一维线性 RNN & 同样是旧状态的保留 $+$ 新输入的更新 \\
+ARMA & 线性 RNN / 状态空间 & 都可表达指数衰减的线性记忆 \\
+Fourier seasonal & N-BEATS seasonal basis & 用谐波表示周期；前者固定结构 \\
+$(1-\mathcal B^{12})$ & Dilated convolution 12 & 同样使用季节 lag 12 \\
+固定 lag coefficients & Attention & Attention 权重会随样本/预测时间变化 \\
+Seasonal ARIMA & Transformer/PatchTST & 前者显式建季节 lag；后者需从数据/位置学习或用 patch 编码 \\
+ARIMA intervals & DeepAR / quantile network & 分别依靠模型误差假设与学习的分布/分位数 \\
+\bottomrule\end{tabularx}\end{center}
+\subsection{考前五分钟：识图 + 易错公式}
+\begin{keybox}[title={识图口诀 / 最终答案卡}]
+\begin{align*}
+&\boxed{\mathrm{AR}(p):\ \mathrm{PACF}\text{ 在 }p\text{ 后截尾；ACF 拖尾}}\\
+&\boxed{\mathrm{MA}(q):\ \mathrm{ACF}\text{ 在 }q\text{ 后截尾；PACF 拖尾}}\\
+&\boxed{\mathrm{ARMA}:\ \mathrm{ACF/PACF}\text{ 通常均拖尾}}\\
+&\boxed{\mathrm{Seasonal\ AR}(P):\ \mathrm{PACF}\text{ 季节截尾于 }PL}\\
+&\boxed{\mathrm{Seasonal\ MA}(Q):\ \mathrm{ACF}\text{ 季节截尾于 }QL}
+\end{align*}
+Q1: AR(1)；Q2: MA(2)；Q3: AR(2)；Q4: ARMA(1,1) 候选；Q5: Seasonal AR(1)；Q6: Seasonal MA(1)。
+\end{keybox}
+\begin{multicols}{2}
+\textbf{区别题必背}\par
+\begin{itemize}
+\item Confidence interval for \emph{mean} $\ne$ prediction interval for \emph{new observation}。
+\item DW $\approx 2(1-r_1)$：近 0 正相关，近 4 负相关。
+\item Additive vs multiplicative：振幅是否随水平变化。
+\item SES 一条 level；Holt level+trend；HW 再加季节。
+\item MA$(q)$ 的误差滞后 $\ne$ moving average 的等权滑动窗。
+\item ADF p 小反对单位根；KPSS p 小反对平稳。
+\item AIC/BIC 小更好；Ljung--Box p 小则怀疑残差未白化。
+\end{itemize}
+\columnbreak
+\textbf{展开题必背}\par
+\begin{itemize}
+\item $(1-\mathcal B)^2y_t=y_t-2y_{t-1}+y_{t-2}$。
+\item $(1-\mathcal B)(1-\mathcal B^{12})y_t=y_t-y_{t-1}-y_{t-12}+y_{t-13}$。
+\item $(1+\theta\mathcal B)(1+\Theta\mathcal B^{12})\epsilon_t$ 包含 $\theta\Theta\epsilon_{t-13}$。
+\item RNN 长期梯度通过 $\prod W\,\sigma'$，容易消失/爆炸。
+\item LSTM：$c_t=f_t\odot c_{t-1}+i_t\odot\tilde c_t$。
+\item Softmax attention：$\alpha\propto e^{q^\top k/\sqrt d}$，权重和为 1。
+\item TCN receptive field：$R=1+(k-1)\sum r_\ell$，还要检查可达 lag。
+\end{itemize}
+\end{multicols}
+\begin{pitbox}[title={阅卷视角：这些表述能避免失分}]
+\textbf{模型识别}请写“suggests / tentative”，不要写“proves / only possible model”；\textbf{残差检验}请写“fail to reject”，不要写“accept $H_0$ as true”；\textbf{机器学习效果}请写“test/validation performance”，不要把训练 MSE 当泛化保证；\textbf{神经网络}注意 learned parameters 与手动设定的 hyperparameters 不同；\textbf{时间预测}注意严格按时间顺序划分训练/测试，避免未来数据泄漏。
+\end{pitbox}
+
+\clearpage
+\section{Original Practice Questions / 原创练习题}
+\begin{keybox}[title={Independent exercises / 独立编写练习}]
+These are newly written conceptual questions for independent practice, \textbf{not} official NUS quiz questions. 以下为独立编写的概念练习，\textbf{并非} NUS 官方试题。
+\end{keybox}
+\subsection*{Exercise 1: Residual diagnostics / 残差诊断}
+An RNN forecast has residual Ljung--Box $p=0.003$. Does this support the white-noise assumption? / RNN 残差检验 $p=0.003$，是否支持白噪声假设？
+\textbf{Answer / 答案：}No. Reject the null of no autocorrelation at the tested lags. / 否，应拒绝所检验滞后内无自相关的原假设。
+\subsection*{Exercise 2: Gradient decay / 梯度衰减}
+A scalar recurrent weight is $0.6$. What is the magnitude of the 8-step linearized gradient factor? / 权重为 $0.6$，八步梯度因子是多少？
+\textbf{Answer / 答案：}$0.6^8\approx 0.0168$. Repeated multiplication causes vanishing gradients. / 连乘造成梯度消失。
+\subsection*{Exercise 3: Linear RNN / 线性循环网络}
+For $W=0.5,U=0.4,V=2$, find the coefficient on $y_{t-2}$ in the unfolded forecast. / 求展开预测中 $y_{t-2}$ 的系数。
+\textbf{Answer / 答案：}$VW^2U=2(0.5)^2(0.4)=0.2$.
+\subsection*{Exercise 4: NNAR vs AR / 神经网络与自回归}
+A feed-forward network uses only identity activations on lagged observations and minimizes squared errors. What classical model does its output resemble? / 滞后输入、恒等激活与平方损失对应哪类经典模型？
+\textbf{Answer / 答案：}A linear AR model estimated by least squares. / 最小二乘估计的线性 AR 模型。
+\subsection*{Exercise 5: Forget gate / 遗忘门}
+When an LSTM forget gate approaches one, what happens to the direct previous-cell-state contribution? / 遗忘门趋近 1 时旧状态如何变化？
+\textbf{Answer / 答案：}The previous cell state is largely preserved. / 旧状态主要被保留。
+\subsection*{Exercise 6: SES equivalence / SES 类比}
+A one-dimensional linear recurrence is $h_t=0.85h_{t-1}+0.15y_t$. Identify its SES smoothing parameter. / 对应的 SES 平滑参数是多少？
+\textbf{Answer / 答案：}$\alpha=0.15$.
+\subsection*{Exercise 7: Invertible MA / 可逆 MA}
+Why does a finite-lag linear predictor generally approximate, rather than exactly reproduce, an invertible MA(1)? / 为什么有限滞后线性预测通常只能近似可逆 MA(1)？
+\textbf{Answer / 答案：}Its autoregressive representation generally has infinitely many lags. / 它的 AR 表示通常具有无限多个滞后项。
+\subsection*{Exercise 8: GRU update / GRU 更新}
+In $h_t=h_{t-1}+z_t(\widetilde h_t-h_{t-1})$, which term plays the role of the SES smoothing factor? / 哪个量类似 SES 平滑系数？
+\textbf{Answer / 答案：}$z_t$ in this stated convention. / 在给定约定下是 $z_t$。
+\subsection*{Exercise 9: Attention / 注意力}
+If a causal attention model forecasts at time $t$, may its attention weights access the unknown $y_{t+1}$? / 在 $t$ 时刻预测，能读取未知的 $y_{t+1}$ 吗？
+\textbf{Answer / 答案：}No; that would be look-ahead leakage. / 不能，否则属于未来信息泄漏。
+\subsection*{Exercise 10: Seasonal lag / 季节滞后}
+For monthly data, an ACF peak at lag 12 suggests what kind of dependence? / 月度数据 ACF 在 lag 12 显著提示什么？
+\textbf{Answer / 答案：}Dependence on the same month of the previous year; inspect seasonal candidates and diagnostics. / 可能与去年同月相关，仍需候选模型比较及残差诊断。
+\clearpage
+\section*{附录：Lecture 7--12 英文术语考前速查表}
+\addcontentsline{toc}{section}{附录：英文术语考前速查表}
+\textcolor{graytext}{\small 使用方法：先看英文识别题干，再看中文含义；粗体词是常见判断题的关键词。此表按讲义章节归类，不代表所有词都必须逐字背诵。}
+
+\subsection*{A. Lecture 7：时间回归与诊断}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 考试中看到它应想到什么\\\midrule\endhead
+Regression on time & 时间趋势回归 & 用时间 $t$ 解释 $y_t$\\
+Trend / linear trend & 趋势／线性趋势 & $\beta_0+\beta_1t$\\
+Deterministic trend & 确定性趋势 & 固定函数描述趋势\\
+Seasonality / seasonal pattern & 季节性／季节模式 & 固定周期重复\\
+Seasonal dummy / indicator & 季节虚拟变量 & 0--1 变量；避免完全共线\\
+Reference category & 基准类别 & 被省略的虚拟变量类别\\
+Fourier terms / harmonics & 傅里叶项／谐波 & $\sin,\cos$ 表达周期\\
+Residual / fitted value & 残差／拟合值 & $e_t=y_t-\hat y_t$\\
+Autocorrelation / serial correlation & 自相关／序列相关 & 相邻误差可能相关\\
+Durbin--Watson statistic & DW 统计量 & 约 2 无一阶相关；小于 2 提示正相关\\
+Homoscedasticity & 同方差性 & 误差方差稳定\\
+Heteroscedasticity & 异方差性 & 方差随水平或时间变化\\
+Prediction interval & 预测区间 & 单个未来观测的不确定性\\
+Confidence interval & 置信区间 & 参数／均值估计的不确定性\\
+Out-of-sample / holdout & 样本外／留出集 & 真正检验预测能力\\
+Exponential growth & 指数增长 & 常用对数线性化\\
+Log transformation & 对数变换 & 稳定乘法性波动\\
+\bottomrule
+\end{longtable}
+
+\subsection*{B. Lecture 8：指数平滑}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 识别提示\\\midrule\endhead
+Simple exponential smoothing (SES) & 简单指数平滑 & 水平项；$\alpha$\\
+Smoothing constant / parameter & 平滑系数／参数 & 通常 $0\le\alpha\le1$\\
+Level / level component & 水平／水平分量 & $L_t$\\
+Trend component / slope & 趋势分量／斜率 & Holt 的 $T_t$\\
+Holt's linear method & Holt 线性趋势法 & 水平＋趋势\\
+Damped trend & 阻尼趋势 & 长期趋势逐渐减弱\\
+Holt--Winters & Holt--Winters 方法 & 水平＋趋势＋季节\\
+Additive seasonality & 加法季节性 & 季节波动幅度近似固定\\
+Multiplicative seasonality & 乘法季节性 & 波动随水平按比例变化\\
+Initialization & 初始值设定 & 初始 level、trend、season\\
+One-step-ahead forecast & 一步预测 & $\hat y_{t+1|t}$\\
+Forecast horizon & 预测步长 & 向前预测 $h$ 期\\
+Sum of squared errors (SSE) & 误差平方和 & $\sum e_t^2$\\
+Root mean squared error (RMSE) & 均方根误差 & 大误差惩罚更重\\
+Mean absolute percentage error (MAPE) & 平均绝对百分比误差 & 接近零的实际值需谨慎\\
+\bottomrule
+\end{longtable}
+
+\subsection*{C. Lecture 9：ARMA 与识图（高优先级）}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 识别提示\\\midrule\endhead
+\textbf{Autocorrelation function (ACF)} & \textbf{自相关函数} & \textbf{MA 看 ACF 截尾}\\
+\textbf{Partial autocorrelation function (PACF)} & \textbf{偏自相关函数} & \textbf{AR 看 PACF 截尾}\\
+Sample ACF (SAC) & 样本自相关 & 图中常见 SAC\\
+Sample PACF (SPAC) & 样本偏自相关 & 图中常见 SPAC\\
+\textbf{Cut off / cutoff} & \textbf{截尾} & 某 lag 后理论相关为零\\
+\textbf{Tail off / die down} & \textbf{拖尾／逐渐衰减} & 可指数衰减或振荡衰减\\
+Lag / lag order & 滞后／滞后阶数 & lag 3 指三期以前\\
+Spike / significant spike & 尖峰／显著尖峰 & 超出置信带需关注\\
+Confidence band & 置信带 & 样本显著性参考界线\\
+Damped oscillation & 阻尼振荡 & 正负交替、幅度缩小\\
+Autoregressive (AR) & 自回归 & 过去观测值\\
+Moving average (MA) & 移动平均模型 & 过去随机冲击，非普通滑动均值\\
+ARMA & 自回归移动平均 & ACF/PACF 通常都拖尾\\
+White noise / innovation & 白噪声／新冲击 & 无时间相关的误差\\
+Stationarity / stationary & 平稳性／平稳的 & 均值、方差、自协方差结构稳定\\
+Causality / causal AR & 因果性／因果 AR & AR 根在单位圆外\\
+Invertibility / invertible MA & 可逆性／可逆 MA & MA 根在单位圆外\\
+Characteristic root & 特征根 & 检查单位圆位置\\
+Backshift operator & 后移算子 & $By_t=y_{t-1}$\\
+\bottomrule
+\end{longtable}
+
+\subsection*{D. Lecture 10：ARIMA、SARIMA 与检验（高优先级）}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 识别提示\\\midrule\endhead
+Integrated / integration order & 单整／差分阶数 & ARIMA 中的 $d$\\
+\textbf{Differencing} & \textbf{差分} & $(1-B)^dy_t$\\
+\textbf{Seasonal differencing} & \textbf{季节差分} & $(1-B^L)^Dy_t$\\
+First / second difference & 一阶／二阶差分 & $y_t-y_{t-1}$；再差一次\\
+Over-differencing & 过度差分 & 不必要的负相关\\
+Unit root & 单位根 & 随机游走常见\\
+Random walk / drift & 随机游走／漂移 & $y_t=y_{t-1}+\delta+\epsilon_t$\\
+Augmented Dickey--Fuller (ADF) & 扩展 Dickey--Fuller 检验 & 原假设：单位根\\
+KPSS test & KPSS 检验 & 原假设：平稳\\
+\textbf{Seasonal period} & \textbf{季节周期} & 月度常见 $L=12$\\
+Seasonal AR (SAR) & 季节自回归 & 季节 PACF 截尾\\
+Seasonal MA (SMA) & 季节移动平均 & 季节 ACF 截尾\\
+\textbf{Ljung--Box test} & \textbf{Ljung--Box 检验} & 原假设：无残差自相关\\
+Null hypothesis ($H_0$) & 原假设 & 小 $p$ 值拒绝\\
+Reject / fail to reject & 拒绝／未能拒绝 & 不等于证明原假设为真\\
+Adequate / inadequate & 充分／不充分 & 模型是否捕捉相关结构\\
+Maximum likelihood (MLE) & 极大似然估计 & 使似然最大\\
+Akaike information criterion (AIC) & 赤池信息准则 & 同类数据比较，越小越好\\
+Bayesian information criterion (BIC) & 贝叶斯信息准则 & 惩罚复杂度，越小越好\\
+Residual diagnostics & 残差诊断 & 残差 ACF、检验、Q--Q 图\\
+Back-transformation & 逆变换 & 从 log 尺度还原\\
+Regression with ARMA errors & 带 ARMA 误差的回归 & 回归解释均值，ARMA 解释误差\\
+\bottomrule
+\end{longtable}
+
+\subsection*{E. Lecture 11：神经网络、RNN、LSTM（对应官方 Q1--Q10）}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 识别提示\\\midrule\endhead
+Feed-forward neural network & 前馈神经网络 & 无循环状态\\
+Neural network autoregression (NNAR) & 神经网络自回归 & 固定滞后窗口作输入\\
+Hidden layer / hidden units & 隐藏层／隐藏单元 & 不是预测步长\\
+Activation / identity activation & 激活函数／恒等激活 & 恒等激活使 NNAR 退化为线性 AR\\
+Tanh / sigmoid & 双曲正切／S 形函数 & 门控和梯度\\
+Recurrent neural network (RNN) & 循环神经网络 & 状态携带过去信息\\
+Hidden state / cell state & 隐状态／细胞状态 & $h_t$ 与 $c_t$ 不同\\
+Backpropagation through time (BPTT) & 时间反向传播 & 跨多个时间步求梯度\\
+\textbf{Vanishing gradient} & \textbf{梯度消失} & 多个小于 1 的因子连乘\\
+Exploding gradient / clipping & 梯度爆炸／梯度裁剪 & 连乘放大；裁剪控制幅度\\
+Long short-term memory (LSTM) & 长短期记忆网络 & 细胞状态与门控\\
+\textbf{Forget gate} & \textbf{遗忘门} & $f_t\approx1$ 保留旧信息\\
+Input gate / output gate & 输入门／输出门 & 写入候选值／输出状态\\
+Candidate cell state & 候选细胞状态 & $\tilde c_t$\\
+Gated recurrent unit (GRU) & 门控循环单元 & 更新门、重置门\\
+\textbf{Update gate} & \textbf{更新门} & 类比 SES 的 $\alpha$\\
+Error-correction form & 误差修正形式 & 旧值＋步长$\times$(目标－旧值)\\
+Linear RNN & 线性循环网络 & 滞后权重 $VW^kU$\\
+Finite window / infinite AR & 有限窗口／无限阶 AR & 可逆 MA 可写成 AR$(\infty)$\\
+Covariate / exogenous variable & 协变量／外生变量 & 可用于补充预测信息\\
+\bottomrule
+\end{longtable}
+
+\subsection*{F. Lecture 12：序列网络、注意力与 Transformer}
+\begin{longtable}{@{}p{0.37\linewidth}p{0.25\linewidth}p{0.32\linewidth}@{}}
+\toprule English & 中文 & 识别提示\\\midrule\endhead
+Temporal convolutional network (TCN) & 时间卷积网络 & 因果卷积、扩张卷积\\
+Causal convolution & 因果卷积 & 不使用未来信息\\
+Dilated convolution & 扩张卷积 & 增大感受野\\
+Receptive field & 感受野 & 网络能看到的历史范围\\
+Sequence-to-sequence (Seq2Seq) & 序列到序列 & 编码器／解码器\\
+Encoder / decoder & 编码器／解码器 & 输入表征／生成预测\\
+Attention mechanism & 注意力机制 & 按相关性分配权重\\
+Query / key / value (Q/K/V) & 查询／键／值 & 匹配分数与加权求和\\
+Scaled dot-product attention & 缩放点积注意力 & $\mathrm{softmax}(QK^\top/\sqrt{d_k})V$\\
+Self-attention & 自注意力 & 同一序列内部的信息交互\\
+Multi-head attention & 多头注意力 & 不同子空间并行关注\\
+Positional encoding & 位置编码 & 注入顺序信息\\
+Mask / causal mask & 掩码／因果掩码 & 防止偷看未来\\
+Transformer & Transformer 架构 & 注意力＋前馈层等\\
+DLinear & 分解线性预测模型 & 趋势／季节分解后线性预测\\
+PatchTST / patch & PatchTST／片段 & 将时间序列切成 patch\\
+Data leakage & 数据泄漏 & 使用了预测时不可得的信息\\
+Rolling-origin evaluation & 滚动起点评估 & 时间顺序验证\\
+\bottomrule
+\end{longtable}
+
+\subsection*{G. 英文题干高频动词与陷阱表达}
+\begin{longtable}{@{}p{0.43\linewidth}p{0.49\linewidth}@{}}
+\toprule 题干表达 & 看到后立即理解为\\\midrule\endhead
+Which statement \textbf{best describes} \ldots? & 哪个选项\textbf{最准确地描述}……？\\
+What is the \textbf{most likely explanation}? & 最可能的原因是什么？\\
+What is the \textbf{appropriate conclusion}? & 应当得出什么结论？\\
+Which model is it \textbf{equivalent to}? & 它等价于哪一种模型？\\
+\textbf{Exactly} / \textbf{approximately} & 精确地／近似地（有限窗口常只能近似）\\
+\textbf{Only} / \textbf{always} / \textbf{must} & 唯一／总是／必须：警惕过度绝对化\\
+\textbf{In general} / \textbf{typically} & 一般情况下／通常（允许例外）\\
+\textbf{After training} / \textbf{test residuals} & 训练之后／测试集残差（不是训练损失）\\
+\textbf{One-step ahead} / \textbf{$k$ steps back} & 向前预测一步／回看 $k$ 个时间步\\
+\textbf{With respect to} & 关于……求导／相对于……\\
+\textbf{Shrinks geometrically} & 按几何级数缩小（梯度消失）\\
+\textbf{Captures all dependence} & 已捕获全部依赖结构（需要残差检验支持）\\
+\textbf{Remedy} / \textbf{consider} & 补救方法／可以考虑（通常不止一种）\\
+\textbf{Collapses to} / \textbf{reduces to} & 退化为／化简为某个经典模型\\
+\textbf{Truncates} / \textbf{finite window} & 截断／有限窗口\\
+\textbf{Put weight on} & 给某个滞后观测赋予多大权重\\
+\textbf{Keep long memory} & 保留长期记忆\\
+\bottomrule
+\end{longtable}
+
+\begin{pitbox}[title={考前英语读题：六个最容易混淆的点}]
+\begin{enumerate}[leftmargin=1.7em,itemsep=2pt]
+\item \textbf{Residuals are autocorrelated} = 残差仍有自相关，通常提示模型未充分解释时间依赖；不是“模型拟合得好”。
+\item \textbf{Small Ljung--Box $p$-value} = 拒绝“残差无自相关”的原假设；不要与 ADF/KPSS 的原假设混淆。
+\item \textbf{Forget gate near one} = 保留旧状态；\textbf{near zero} 才是强烈遗忘。
+\item \textbf{Update gate} 在题目给出的 GRU 误差修正写法中对应 SES 的 $\alpha$；不同教材门的符号约定可能不同。
+\item \textbf{Identity activation} = 不引入非线性；多隐藏单元也无法让线性 NNAR 变成非线性。
+\item \textbf{Seasonal lag 12}（月度数据）= 去年同月；\textbf{lag 1} = 上个月。AR 看 PACF，MA 看 ACF。
+\end{enumerate}
+\end{pitbox}
+
+\begin{exam}[title={最后 3 分钟：英语关键词 $\longrightarrow$ 解题动作}]
+\textbf{cuts off / dies down} $\to$ 先判 AR/MA；
+\textbf{seasonal lag} $\to$ 查 $L,2L$；
+\textbf{Ljung--Box} $\to$ 看残差相关；
+\textbf{vanishing gradient} $\to$ 看雅可比连乘；
+\textbf{forget gate} $\to$ 看保留旧状态；
+\textbf{linear RNN} $\to$ 算 $VW^kU$；
+\textbf{identity} $\to$ 线性 AR；
+\textbf{update gate} $\to$ 类比平滑系数；
+\textbf{causal mask} $\to$ 不允许看未来。
+\end{exam}
+
+\end{document}

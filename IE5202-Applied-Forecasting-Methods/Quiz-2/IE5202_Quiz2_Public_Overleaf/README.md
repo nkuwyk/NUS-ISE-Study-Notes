@@ -1,0 +1,1 @@
+IE5202 Quiz 2 public edition. Compile main.tex with XeLaTeX twice. Original practice plots in figures/. Third-party figures and official questions are omitted or replaced. Independent, non-commercial student notes; not endorsed by NUS.
